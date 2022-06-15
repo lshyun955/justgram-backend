@@ -16,7 +16,8 @@ const signUp = async (user) => {
       error.statusCode = 400;
       throw error;
     } else {
-      const encoded = await bcrypt.hash(user.password, 10);
+      const salt = await bcrypt.genSalt();
+      const encoded = await bcrypt.hash(user.password, salt);
       const result = await userRepository.create({
         ...user,
         password: encoded,
@@ -51,8 +52,8 @@ const login = async (user_id, password) => {
         throw error;
       }
     } else {
-      const error = new Error("Invalid User");
-      error.statusCode = 400;
+      const error = new Error("Existing_User");
+      error.statusCode = 409;
       throw error;
     }
   } else {
