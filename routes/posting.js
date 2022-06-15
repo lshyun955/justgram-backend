@@ -1,9 +1,11 @@
 const express = require("express");
+const postingController = require("../controllers/posting.js");
 
 const router = express.Router();
-router.get("/");
-router.get("/:id");
-router.put("/:id");
-router.post("/");
-router.delete("/:id");
-export default router;
+router.get("/", postingController.findAll);
+router.get("/:id", postingController.findById);
+router.put("/:id", postingController.update);
+router.post("/", postingController.create);
+router.delete("/:id", postingController.remove);
+
+module.exports = router;
