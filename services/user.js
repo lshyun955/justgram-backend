@@ -1,5 +1,8 @@
 const userRepository = require("../models/user.js");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
+const SECRET_KEY = "G^!Sqg6CMWif";
 const signUp = async (user) => {
   const check = await userRepository.findById(user.user_id);
   if (user.password.length < 8) {
@@ -12,8 +15,12 @@ const signUp = async (user) => {
       error.statusCode = 400;
       throw error;
     } else {
-      const result = await userRepository.create(user);
-      console.log("signUp return value", result);
+      const encoded = await bcrypt.hash(user.password, 10);
+      const result = await userRepository.create({
+        ...user,
+        password: encoded,
+      });
+      // console.log("signUp return value", result);
       return result;
     }
   }
@@ -24,4 +31,31 @@ const getAll = async () => {
   return users;
 };
 
-module.exports = { signUp, getAll };
+const login = async (user_id, password) => {
+  const user = await userRepository.findById(user_id);
+  if (user_id.length && password.length) {
+    if (user) {
+      const check = await bcrypt.compare(password, user.password);
+      if (check) {
+        const token = jwt.sign(
+          { user_id, nickname: user.nickname },
+          SECRET_KEY,
+          { expiresIn: "1d" }
+        );
+        console.log(token);
+        return token;
+      } else {
+        const error = new Error("Invalid Login");
+        error.statusCode = 400;
+        throw error;
+      }
+    }
+  } else {
+    const error = new Error("KEY_ERROR");
+    error.statusCode = 400;
+    throw error;
+  }
+  // console.log(user);
+};
+
+module.exports = { signUp, getAll, login };

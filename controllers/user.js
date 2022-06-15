@@ -9,7 +9,7 @@ const signUp = (req, res) => {
   }
 };
 
-const getAll = async (req, res, next) => {
+const getAll = async (req, res) => {
   try {
     const users = await userService.getAll();
     return res.status(200).json(users);
@@ -18,4 +18,13 @@ const getAll = async (req, res, next) => {
   }
 };
 
-module.exports = { signUp, getAll };
+const login = async (req, res) => {
+  try {
+    const { user_id, password } = req.body;
+    const token = await userService.login(user_id, password);
+    return res.status(200).json({ token });
+  } catch (error) {
+    return res.status(error.statusCode || 500).json({ message: error.message });
+  }
+};
+module.exports = { signUp, getAll, login };
