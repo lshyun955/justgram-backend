@@ -27,4 +27,6 @@ const login = async (req, res) => {
     return res.status(error.statusCode || 500).json({ message: error.message });
   }
 };
-module.exports = { signUp, getAll, login };
+
+const verification = async () => {};
+module.exports = { signUp, getAll, login, verification };

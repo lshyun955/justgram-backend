@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const SECRET_KEY = "G^!Sqg6CMWif";
+
 const signUp = async (user) => {
   const check = await userRepository.findById(user.user_id);
   if (user.password.length < 8) {
@@ -45,10 +46,14 @@ const login = async (user_id, password) => {
         console.log(token);
         return token;
       } else {
-        const error = new Error("Invalid Login");
+        const error = new Error("Invalid User");
         error.statusCode = 400;
         throw error;
       }
+    } else {
+      const error = new Error("Invalid User");
+      error.statusCode = 400;
+      throw error;
     }
   } else {
     const error = new Error("KEY_ERROR");
