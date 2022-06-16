@@ -13,7 +13,7 @@ const signUp = async (user) => {
   } else {
     if (check) {
       const error = new Error("이미 존재하는 아이디입니다.");
-      error.statusCode = 400;
+      error.statusCode = 409;
       throw error;
     } else {
       const salt = await bcrypt.genSalt();
@@ -22,7 +22,6 @@ const signUp = async (user) => {
         ...user,
         password: encoded,
       });
-      // console.log("signUp return value", result);
       return result;
     }
   }
@@ -52,8 +51,8 @@ const login = async (user_id, password) => {
         throw error;
       }
     } else {
-      const error = new Error("Existing_User");
-      error.statusCode = 409;
+      const error = new Error("Invalid User");
+      error.statusCode = 400;
       throw error;
     }
   } else {

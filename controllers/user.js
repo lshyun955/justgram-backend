@@ -1,8 +1,8 @@
 const userService = require("../services/user.js");
 
-const signUp = (req, res) => {
+const signUp = async (req, res) => {
   try {
-    userService.signUp(req.body);
+    await userService.signUp(req.body);
     return res.status(201).json({ message: "CREATED" });
   } catch (error) {
     return res.status(error.statusCode || 500).json({ message: error.message });
