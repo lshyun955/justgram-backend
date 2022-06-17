@@ -1,3 +1,4 @@
+const { createError } = require("../common/creatError.js");
 const postingRepositroy = require("../models/posting.js");
 
 const findAll = async () => {
@@ -18,8 +19,7 @@ const findById = async (id) => {
     };
     return { data: result };
   } else {
-    const error = new Error("Not Found");
-    error.statusCode = 400;
+    const error = createError("Not Found", 400);
     throw error;
   }
 };
@@ -29,8 +29,7 @@ const update = async (id, content) => {
   if (posting.length) {
     return await postingRepositroy.update(id, content);
   } else {
-    const error = new Error("Not Found");
-    error.statusCode = 400;
+    const error = createError("Not Found", 400);
     throw error;
   }
 };
@@ -38,8 +37,7 @@ const update = async (id, content) => {
 const create = async (userDto) => {
   const posting = await postingRepositroy.create(userDto);
   if (posting instanceof Error) {
-    const error = new Error("Not Created");
-    error.statusCode = 400;
+    const error = createError("Not Created", 400);
     throw error;
   } else {
     return posting;
@@ -51,8 +49,7 @@ const remove = async (id) => {
   if (posting.length) {
     return await postingRepositroy.remove(id);
   } else {
-    const error = new Error("Not Found");
-    error.statusCode = 400;
+    const error = createError("Not Found", 400);
     throw error;
   }
 };
