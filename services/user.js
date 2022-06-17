@@ -2,8 +2,9 @@ const userRepository = require("../models/user.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { createError } = require("../common/creatError.js");
+const dotenv = require("dotenv");
 
-const SECRET_KEY = "G^!Sqg6CMWif";
+dotenv.config();
 
 const signUp = async (user) => {
   const check = await userRepository.findById(user.user_id);
@@ -39,7 +40,7 @@ const login = async (user_id, password) => {
       if (check) {
         const token = jwt.sign(
           { user_id, nickname: user.nickname },
-          SECRET_KEY,
+          process.env.SECRET_KEY,
           { expiresIn: "1d" }
         );
         console.log(token);
